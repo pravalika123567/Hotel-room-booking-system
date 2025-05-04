@@ -1,0 +1,115 @@
+include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define MAX_ROOMS 5
+#define NAME_LENGTH 50
+
+typedef struct Booking {
+char guestName[NAME_LENGTH];
+int duration;
+struct Booking* next;
+} Booking;
+
+typedef struct {
+int roomNumber;
+char roomType[20];
+Booking* bookings;
+} Room;
+
+Room hotel[MAX_ROOMS];
+
+void initializeRooms() {
+int i;
+for (i = 0; i < MAX_ROOMS; i++) {
+hotel[i].roomNumber = 101 + i;
+if (i == 0 || i == 1)
+strcpy(hotel[i].roomType, "Single");
+else if (i == 2 || i == 3)
+strcpy(hotel[i].roomType, "Double");
+else
+strcpy(hotel[i].roomType, "Suite");
+
+hotel[i].bookings = NULL;
+}
+
+}
+
+void bookRoom(int roomNum, char* guestName, int duration) {
+for (int i = 0; i < MAX_ROOMS; i++) {
+if (hotel[i].roomNumber == roomNum) {
+Booking* newBooking = (Booking*)malloc(sizeof(Booking));
+strcpy(newBooking->guestName, guestName);
+newBooking->duration = duration;
+newBooking->next = hotel[i].bookings;
+hotel[i].bookings = newBooking;
+printf("Booking successful for %s in Room %d\n", guestName, roomNum);
+return;
+}
+}
+printf("Room %d not found.\n", roomNum);
+}
+
+void displayBookings() {
+for (int i = 0; i < MAX_ROOMS; i++) {
+printf("Room %d (%s):\n", hotel[i].roomNumber, hotel[i].roomType);
+if (hotel[i].bookings == NULL) {
+printf("  No bookings.\n");
+} else {
+Booking* current = hotel[i].bookings;
+while (current != NULL) {
+printf("  Guest: %s, Duration: %d days\n", current->guestName, current->duration);
+current = current->next;
+}
+}
+}
+}
+
+int main() {
+int choice;
+char name[NAME_LENGTH];
+int roomNum, days;
+
+initializeRooms();
+
+do {
+printf("\nHotel Booking System\n");
+printf("1. Book a Room\n");
+printf("2. Display All Bookings\n");
+printf("3. Exit\n");
+printf("Enter your choice: ");
+scanf("%d", &choice);
+getchar();
+
+switch (choice) {    
+    case 1:    
+        printf("Enter Room Number: ");    
+        scanf("%d", &roomNum);    
+        getchar();      
+        printf("Enter Guest Name: ");    
+        fgets(name, NAME_LENGTH, stdin);    
+        name[strcspn(name, "\n")] = '\0';      
+        printf("Enter Duration (days): ");    
+        scanf("%d", &days);    
+        bookRoom(roomNum, name, days);    
+        break;    
+
+    case 2:    
+        displayBookings();    
+        break;    
+
+    case 3:    
+        printf("Exiting...\n");    
+        break;    
+
+    default:    
+        printf("Invalid choice.\n");    
+}
+
+} while (choice != 3);
+
+return 0;
+
+}
+Software design for this code
+
