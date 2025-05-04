@@ -109,7 +109,5 @@ switch (choice) {
 } while (choice != 3);
 
 return 0;
-
 }
-Software design for this code
 
